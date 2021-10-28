@@ -6,7 +6,7 @@
 
 脚本开源不收费，如对你有用可以打赏支持我。
 
-<img src="https://gitee.com/zzzjoy/My_Pictures/raw/master/202110282058304.png" alt="img" style="zoom:20%;" />
+![image-20211028210639165](https://gitee.com/zzzjoy/My_Pictures/raw/master/202110282106213.png)
 
 ## Can do what?
 
@@ -30,7 +30,7 @@
 
 ### 部署至云函数
 
-**comming soon~**
+**coming soon~**
 
 ## Others
 
