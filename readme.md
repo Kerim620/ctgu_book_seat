@@ -20,11 +20,11 @@
 
 ### 服务器定时任务
 
-1.使用 `git clone https://github.com/zzzjoy-620/ctgu_book_seat.git` 克隆本项目到本地
+1.使用 `git clone https://github.com/zzzjoy-620/ctgu_book_seat.git` 克隆本项目到本地。
 
-2.安装依赖 `pip install -r requirements.txt`
+2.安装依赖 `pip install -r requirements.txt`。
 
-3.修改config,py的配置，具体看注释。
+3.修改config.py的配置，具体看注释。
 
 4.为book_seat.py设置定时任务，具体自行百度。
 
