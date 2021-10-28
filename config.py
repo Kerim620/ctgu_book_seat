@@ -5,14 +5,14 @@
 # day为字符串，只能填today或tomorrow，意思是抢当天的还是第二天的位置
 users = [
     {
-        'username': '2018137120',
-        'password': '296932',
+        'username': '2019123456',
+        'password': '123456',
         'seats': [['13', '018']],
         'day':'today'
     },
     {
-        'username': '2018137113',
-        'password': '280513',
+        'username': '2020123456',
+        'password': '255555',
         'seats': [['13', '009'], ['13', '021']],
         'day':'tomorrow'
     }
