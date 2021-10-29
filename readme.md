@@ -16,7 +16,6 @@
 ## :rocket:How to use?
 
 ### 服务器定时任务
-
 1.使用 `git clone https://github.com/zzzjoy-620/ctgu_book_seat.git` 克隆本项目到本地。
 
 2.安装依赖 `pip install -r requirements.txt`。
@@ -41,6 +40,8 @@
 
 5.配置「触发器配置」。将触发方式修改为定时触发，cron表达式为 `45 30 6 * * * *`，代表每天6:30:45运行脚本。
 
+![image-20211029080949163](https://gitee.com/zzzjoy/My_Pictures/raw/master/202110290809230.png)
+
 6.部署完成，可以试试点击右边的 测试 进行测试，在左侧的 日志查询 中查看结果。
 
 ![image-20211029073944915](https://gitee.com/zzzjoy/My_Pictures/raw/master/202110290739053.png)
@@ -60,4 +61,4 @@
 
 ## :see_no_evil:TODO
 
-**See you later**
+**To much to do...**
