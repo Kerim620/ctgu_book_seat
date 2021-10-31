@@ -40,6 +40,7 @@ def login(session, username, password):
     r = session.post(url=cas_url, data=data, allow_redirects=False)
     if r.status_code == 200:
         logger.info('账号或密码错误，登录失败')
+        pushplus('账号或密码错误，登录失败')
         exit(1)
     # 这里完善cookies，以获取access_token
     session.get(url=r.url)
@@ -146,6 +147,7 @@ def get_book_data(username, area_id, seat_num, day):
     session = requests.Session()
     session.headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36',
+        'Referer': 'http://zwyy.lib.ctgu.edu.cn/home/web/seat/area/1'
     }
     area_name = get_area_name(session, area_id)
     segment = get_segment(session, area_id, day)
@@ -173,6 +175,7 @@ def book_seat(book_data, access_token):
     }
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36',
+        'Referer': 'http://zwyy.lib.ctgu.edu.cn/web/seat3'
     }
     r = requests.post(url=url, data=data, headers=headers)
     result = json.loads(r.text)
@@ -192,6 +195,27 @@ def book_seat_user(user):
         logger.info(name + user['username'] + '【' + day + book_data['area_name'] + book_data['seat_num'] + '】' + result['msg'])
         if result['status'] == 1:
             break
+        elif result['status'] == 0 and user['seats'].index(seat) == len(user['seats']) - 1:
+            pushplus(name + user['username'] + '全部座位预约失败，请及时自行预约')
+
+
+# pushplus推送渠道
+def pushplus(msg):
+    token = pushplus_token
+    if token != '':
+        pushplus_url = 'http://pushplus.hxtrip.com/send'
+        data = {
+            'token': token,
+            'title': '图书馆自动预约提醒',
+            'content': msg,
+            'template': 'html'
+        }
+        r = requests.post(url=pushplus_url, data=data)
+        result = re.findall(r'<code>([0-9]{3})</code>', r.text)
+        if result[0] == '200':
+            logger.info('消息推送成功：' + msg)
+        else:
+            logger.info('消息推送失败：' + msg)
 
 
 def main():
@@ -225,7 +249,11 @@ users = [
         'day':'tomorrow'
     }
 ]
+# 登录\预约失败会推送消息，采取pushplus推送渠道，请自行注册获取token，如不想受到推送请留空
+pushplus_token = 'f1d396a853bb4821931cbc6200812345'
 
+
+main()
 # 图书馆各个区域对应的区域编号
 # 7 一楼C区
 # 8 二楼A区

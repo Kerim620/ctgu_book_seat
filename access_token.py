@@ -4,6 +4,9 @@ import requests
 
 
 # 获取网页中的lt，execution以及cookies(JSESSIONID)
+from wx_push import pushplus
+
+
 def get_lt_execution(session):
     cas_url = 'http://cas.lib.ctgu.edu.cn/cas/login?service=http://zwyy.lib.ctgu.edu.cn/cas/index.php?callback=http://zwyy.lib.ctgu.edu.cn/home/web/seat/area/1'
     r = session.get(url=cas_url)
@@ -33,6 +36,7 @@ def login(session, username, password):
     r = session.post(url=cas_url, data=data, allow_redirects=False)
     if r.status_code == 200:
         print('账号或密码错误，登录失败')
+        pushplus('账号或密码错误，登录失败')
         exit(1)
     # 这里完善cookies，以获取access_token
     session.get(url=r.url)

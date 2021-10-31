@@ -9,6 +9,9 @@ from seat_info import get_book_data
 
 
 # 通过book_data和access_token来直接预约
+from wx_push import pushplus
+
+
 def book_seat(book_data, access_token):
     url = 'http://zwyy.lib.ctgu.edu.cn/api.php/spaces/' + book_data['seat_id'] + '/book'
     data = {
@@ -20,6 +23,7 @@ def book_seat(book_data, access_token):
     }
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36',
+        'Referer': 'http://zwyy.lib.ctgu.edu.cn/web/seat3'
     }
     r = requests.post(url=url, data=data, headers=headers)
     result = json.loads(r.text)
@@ -39,6 +43,8 @@ def book_seat_user(user):
         print(name + user['username'] + '【' + day + book_data['area_name'] + book_data['seat_num'] + '】' + result['msg'])
         if result['status'] == 1:
             break
+        elif result['status'] == 0 and user['seats'].index(seat) == len(user['seats'])-1:
+            pushplus(name + user['username'] + '全部座位预约失败，请及时自行预约')
 
 
 def main():
