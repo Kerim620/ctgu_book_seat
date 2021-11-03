@@ -44,7 +44,7 @@ def book_seat_user(user):
         if result['status'] == 1:
             break
         elif result['status'] == 0 and user['seats'].index(seat) == len(user['seats'])-1:
-            pushplus(name + user['username'] + '全部座位预约失败，请及时自行预约')
+            pushplus(name + day + '全部座位预约失败，请及时自行预约')
 
 
 def main():

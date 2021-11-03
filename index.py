@@ -23,7 +23,7 @@ def get_lt_execution(session):
 # 登录
 def login(session, username, password):
     lt, execution, cookie = get_lt_execution(session)
-    way = '&' + time.strftime("%Y%m%d%H%M", time.localtime())
+    way = '&' + time.strftime("%Y%m%d%H%M", time.localtime(time.time() + 28800))
     cas_url = 'http://cas.lib.ctgu.edu.cn/cas/login;jsessionid=' + cookie[
         'JSESSIONID'] + '?service=http%3A%2F%2Fzwyy.lib.ctgu.edu.cn%2Fcas%2Findex.php%3Fcallback%3Dhttp%3A%2F%2Fzwyy.lib.ctgu.edu.cn%2Fhome%2Fweb%2Fseat%2Farea%2F1'
     data = {
@@ -76,7 +76,7 @@ def get_access_token(username, password):
 # 获取各个具体区域的座位剩余信息
 def get_area_info(session, day):
     area_info_url = 'http://zwyy.lib.ctgu.edu.cn/api.php/v3areas/1/date/' + day
-    if day == time.strftime("%Y-%m-%d", time.localtime()):
+    if day == time.strftime("%Y-%m-%d", time.localtime(time.time() + 28800)):
         area_info_url = 'http://zwyy.lib.ctgu.edu.cn/api.php/v3areas/1'
     r = session.get(url=area_info_url)
     result = json.loads(r.text)
@@ -131,8 +131,8 @@ def get_segment(session, area_id, day):
 
 # 通过seat_num和segment以及area_id获取对应的seat_id
 def get_seat_id(session, area_id, segment, seat_num):
-    nowday = time.strftime("%Y-%m-%d", time.localtime())
-    nowtime = time.strftime("%H:%M", time.localtime())
+    nowday = time.strftime("%Y-%m-%d", time.localtime(time.time() + 28800))
+    nowtime = time.strftime("%H:%M", time.localtime(time.time() + 28800))
     seat_info_url = 'http://zwyy.lib.ctgu.edu.cn/api.php/spaces_old?area=' + str(area_id) + '&segment=' + str(
         segment) + '&day=' + nowday + '&startTime=' + nowtime + '&endTime=22:00'
     r = session.get(url=seat_info_url)
@@ -188,15 +188,15 @@ def book_seat_user(user):
     access_token, name = get_access_token(user['username'], user['password'])
     for seat in user['seats']:
         book_data = get_book_data(user['username'], seat[0], seat[1], user['day'])
-        day = time.strftime("%m-%d", time.localtime())
+        day = time.strftime("%m-%d", time.localtime(time.time() + 28800))
         if user['day'] == 'tomorrow':
-            day = time.strftime("%m-%d", time.localtime(time.time() + 86400))
+            day = time.strftime("%m-%d", time.localtime(time.time() + 86400 + 28800))
         result = book_seat(book_data, access_token)
         logger.info(name + user['username'] + '【' + day + book_data['area_name'] + book_data['seat_num'] + '】' + result['msg'])
         if result['status'] == 1:
             break
         elif result['status'] == 0 and user['seats'].index(seat) == len(user['seats']) - 1:
-            pushplus(name + user['username'] + '全部座位预约失败，请及时自行预约')
+            pushplus(name + day + '全部座位预约失败，请及时自行预约')
 
 
 # pushplus推送渠道
@@ -225,9 +225,9 @@ def main():
 
 
 def main_handler(event, content):
-    logger.info('-'*30+'日志开始'+'-'*30)
+    logger.info('-'*30+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + 28800))+'日志开始'+'-'*30)
     main()
-    logger.info('-'*30+'日志结束'+'-'*30)
+    logger.info('-'*30+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + 28800))+'日志结束'+'-'*30)
 
 
 # 用户配置，可以配置多个人的，配置多人的可以用来抢多个邻近的位置(采用多线程实现)
@@ -249,11 +249,10 @@ users = [
         'day':'tomorrow'
     }
 ]
-# 登录\预约失败会推送消息，采取pushplus推送渠道，请自行注册获取token，如不想受到推送请留空
+# 登录\预约失败会推送消息，采取pushplus推送渠道，请自行上官网注册获取token，如不想受到推送请留空
 pushplus_token = 'f1d396a853bb4821931cbc6200812345'
 
 
-main()
 # 图书馆各个区域对应的区域编号
 # 7 一楼C区
 # 8 二楼A区
