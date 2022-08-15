@@ -8,18 +8,17 @@ from config import pushplus_token
 def pushplus(msg):
     token = pushplus_token
     if token != '':
-        pushplus_url = 'http://pushplus.hxtrip.com/send'
+        pushplus_url = 'http://www.pushplus.plus/send'
         data = {
             'token': token,
             'title': '图书馆自动预约提醒',
-            'content': msg,
-            'template': 'html'
+            'content': time.strftime("%m-%d %H:%M:%S", time.localtime(time.time() + 28800)) + '\n' + msg
         }
         r = requests.post(url=pushplus_url, data=data)
-        result = re.findall(r'<code>([0-9]{3})</code>', r.text)
-        if result[0] == '200':
-            print('消息推送成功：' + msg)
+        result = json.loads(r.text)
+        if result['code'] == 200:
+            logger.info('消息推送成功：' + msg)
         else:
-            print('消息推送失败：' + msg)
+            logger.info('消息推送失败：' + msg)
 
 
